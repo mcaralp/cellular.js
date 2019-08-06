@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mcaralp/cellular.js.git"
+    "url": "git+https://github.com/mcaralp/cellule.js.git"
   },
   "keywords": [
     "cellular",
@@ -25,9 +25,9 @@
   "author": "Mathieu Caralp",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mcaralp/cellular.js/issues"
+    "url": "https://github.com/mcaralp/cellule.js/issues"
   },
-  "homepage": "https://github.com/mcaralp/cellular.js#readme",
+  "homepage": "https://github.com/mcaralp/cellule.js#readme",
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
