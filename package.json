@@ -1,0 +1,41 @@
+{
+  "name": "cellular.js",
+  "version": "1.0.1",
+  "description": "A library to simulate cellular automata.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "buildProd": "webpack --env.production",
+    "buildDev": "webpack",
+    "buildAll": "run-s buildProd buildDev",
+    "prepublish": "run-s eslint buildAll",
+    "eslint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcaralp/cellular.js.git"
+  },
+  "keywords": [
+    "cellular",
+    "automata"
+  ],
+  "author": "Mathieu Caralp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcaralp/cellular.js/issues"
+  },
+  "homepage": "https://github.com/mcaralp/cellular.js#readme",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel": "^6.23.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.1.0",
+    "npm-run-all": "^4.1.5",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6"
+  }
+}
