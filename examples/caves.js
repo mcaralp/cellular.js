@@ -3,7 +3,7 @@
 
 function setup()
 {
-    createAutomata(100, 100, 5);
+    createAutomaton(100, 100, 5);
 }
 
 function construct()

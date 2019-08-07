@@ -10,7 +10,7 @@ function randInt(max)
 
 function setup()
 {
-    createAutomata(80, 80, 6);
+    createAutomaton(80, 80, 6);
     framerate(Math.floor(max / 4));
 }
 

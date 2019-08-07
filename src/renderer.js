@@ -118,7 +118,7 @@ module.exports = class Renderer
         return this.currentCell.neighborhood[index] == null ? null : this.currentCell.neighborhood[index].cell;
     }
 
-    createAutomata()
+    createAutomaton()
     {
         this.canvas  = document.createElement('canvas');
         
@@ -209,7 +209,7 @@ module.exports = class Renderer
             global.setup();
         }
 
-        this.createAutomata();
+        this.createAutomaton();
 
         if(global.construct)
         {

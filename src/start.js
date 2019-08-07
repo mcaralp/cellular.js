@@ -33,7 +33,7 @@ function start (global)
         }
     };
 
-    global.createAutomata = (width, height, ...args) =>
+    global.createAutomaton = (width, height, ...args) =>
     {
         let cellSize = 1, parent = null;
 

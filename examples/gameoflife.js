@@ -5,7 +5,7 @@ let deadColor  = new ColorRGB(0, 255, 0);
 
 function setup()
 {
-    createAutomata(200, 200, 3);
+    createAutomaton(200, 200, 3);
     framerate(5);
 }
 
