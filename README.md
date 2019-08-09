@@ -21,7 +21,7 @@ Include the ca.js file or the minified version ca.min.js in your HTML page, and 
 <html>
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/cellule.js@1.0.5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cellule.js@1.1.0"></script>
     <script src="sketch.js"></script>
 </head>
     
