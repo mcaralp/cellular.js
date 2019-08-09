@@ -1,5 +1,6 @@
 
-const util = require('./util');
+const util      = require('./util');
+const cloneDeep = require('clone-deep');
 
 module.exports = class Renderer
 {
@@ -153,7 +154,7 @@ module.exports = class Renderer
         if(this.currentCell == null)
             throw Error('This function can only be called in loop or construct function.');
 
-        return JSON.parse(JSON.stringify(this.currentCell.cell));
+        return cloneDeep(this.currentCell.cell);
     }
 
     getNeighbor(index)
