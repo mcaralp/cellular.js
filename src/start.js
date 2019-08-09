@@ -13,6 +13,9 @@ function start (global)
     global.BOTTOMLEFT  = 6;
     global.LEFT        = 7; 
 
+    global.SHUFFLED    = 0;
+    global.ORDERED     = 1; 
+
     global.ColorHSV = class ColorHSV
     {
         constructor(h, s, v)
@@ -52,7 +55,39 @@ function start (global)
 
         render.setSize(width, height);
         render.setCellSize(cellSize);
-        render.setParent(parent);
+        render.setParentId(parent);
+    };
+
+    global.size = (width, height) =>
+    {
+        if(width != undefined && height != undefined)
+            render.setSize(width, height);
+
+        return render.getSize();
+    };
+
+    global.cellSize = (size) => 
+    {
+        if(size == undefined)
+            return render.getCellSize();
+
+        render.setCellSize(size);
+    };
+
+    global.parentId = (id) => 
+    {
+        if(id == undefined)
+            return render.getParentId();
+
+        render.setParentId(id);
+    };
+
+    global.idMode = (mode) => 
+    {
+        if(mode != undefined)
+            render.setShuffledId(mode == global.SHUFFLED);
+
+        return render.isShuffledId() ? global.SHUFFLED : global.ORDERED;
     };
 
     global.framerate = (fps) => 
@@ -61,6 +96,16 @@ function start (global)
             return render.getFramerate();
 
         render.setFramerate(fps);
+    };
+
+    global.pointerDistance = () =>
+    {
+        return render.getPointerDistance();
+    };
+
+    global.pointerSquaredDistance = () =>
+    {
+        return render.getPointerSquaredDistance();
     };
 
     global.point = (x, y, c) =>

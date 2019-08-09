@@ -25,6 +25,29 @@ let hsvToRgb = (c) =>
     return {r: Math.floor(r * 255), g: Math.floor(g * 255), b: Math.floor(b * 255)};
 };
 
+let squaredDistance = (x1, y1, x2, y2) =>
+{
+    return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+};
+
+let distance = (x1, y1, x2, y2) =>
+{
+    return Math.sqrt(squaredDistance(x1, y1, x2, y2));
+};
+
+let shuffle = (array) =>
+{
+    for (let i = array.length - 1; i > 0; --i) 
+    {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
+
 module.exports = {
-    hsvToRgb: hsvToRgb
+    hsvToRgb: hsvToRgb,
+    squaredDistance: squaredDistance,
+    distance: distance,
+    shuffle: shuffle
 };

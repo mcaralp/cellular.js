@@ -9,7 +9,6 @@ module.exports = class Renderer
         this.fps         = 30; 
         this.step        = 0;
         this.currentCell = null;
-        this.currentId   = -1;
 
         this.width       = 100;
         this.height      = 100;
@@ -18,6 +17,8 @@ module.exports = class Renderer
         this.parentId    = null;
         this.interval    = null;  
         this.setupDone   = false;
+        this.mousePos    = null;
+        this.shuffledId  = false;
     }
 
     setCellSize(size)
@@ -26,6 +27,11 @@ module.exports = class Renderer
             throw new Error('This function can only be called in the setup function.');
 
         this.cellSize = size;
+    }
+
+    getCellSize()
+    {
+        return this.cellSize;
     }
 
     setSize(width, height)
@@ -37,12 +43,22 @@ module.exports = class Renderer
         this.height = height;
     }
 
-    setParent(parentId)
+    getSize()
+    {   
+        return {width: this.width, height: this.height};
+    }
+
+    setParentId(parentId)
     {
         if(this.setupDone)
             throw new Error('This function can only be called in the setup function.');
 
         this.parentId = parentId;
+    }
+
+    getParentId()
+    {
+        return this.parentId;
     }
 
     getFramerate()
@@ -61,10 +77,20 @@ module.exports = class Renderer
         }
     }
 
+    isShuffledId()
+    {
+        return this.shuffledId;
+    }
+
+    setShuffledId(val)
+    {
+        this.shuffledId = val;
+    }
+
     setPoint(x, y, c)
     {
         if(this.currentCell == null)
-            throw Error('This function can only be called in loop function.');
+            throw Error('This function can only be called in loop or construct function.');
 
         if(c.h != undefined) c = util.hsvToRgb(c);
 
@@ -90,22 +116,42 @@ module.exports = class Renderer
 
     getId()
     {
-        if(this.currentId == null)
+        if(this.currentCell == null)
             throw Error('This function can only be called in loop or construct function.');
-        return this.currentId;
+        return this.currentCell.id;
+    }
+
+    getPointerDistance()
+    {
+        if(this.currentCell == null)
+            throw Error('This function can only be called in loop or construct function.');
+
+        if(this.mousePos == null) return 0xFFFFFFFF;
+
+        return util.distance(this.currentCell.x, this.currentCell.y, this.mousePos.x, this.mousePos.y);
+    }
+
+    getPointerSquaredDistance()
+    {
+        if(this.currentCell == null)
+            throw Error('This function can only be called in loop or construct function.');
+
+        if(this.mousePos == null) return 0xFFFFFFFF;
+
+        return util.squaredDistance(this.currentCell.x, this.currentCell.y, this.mousePos.x, this.mousePos.y);
     }
 
     getCell()
     {
         if(this.currentCell == null)
-            throw Error('This function can only be called in loop function.');
+            throw Error('This function can only be called in loop or construct function.');
         return this.currentCell.cell;
     }
 
     cloneCell()
     {
         if(this.currentCell == null)
-            throw Error('This function can only be called in loop function.');
+            throw Error('This function can only be called in loop or construct function.');
 
         return JSON.parse(JSON.stringify(this.currentCell.cell));
     }
@@ -113,14 +159,17 @@ module.exports = class Renderer
     getNeighbor(index)
     {
         if(this.currentCell == null)
-            throw Error('This function can only be called in loop function.');
+            throw Error('This function can only be called in loop or construct function.');
 
         return this.currentCell.neighborhood[index] == null ? null : this.currentCell.neighborhood[index].cell;
     }
+    
 
     createAutomaton()
     {
         this.canvas  = document.createElement('canvas');
+        this.canvas.addEventListener('mousemove', this.onPointerMove.bind(this));
+        this.canvas.addEventListener('mouseout', this.onPointerOut.bind(this));
         
         if(typeof this.parentId == 'string' && this.parentId != null)
         {
@@ -141,10 +190,28 @@ module.exports = class Renderer
             new Array(this.width * this.height)
         ];
 
+        let ids = new Array(this.width * this.height).fill(0).map((e, i) => i);
+        if(this.shuffledId)
+            util.shuffle(ids);
+
         for(let i = 0; i < this.width * this.height; ++i)
         {
-            this.cells[0][i] = {cell: null, neighborhood: null, pos: null};
-            this.cells[1][i] = {cell: null, neighborhood: null, pos: null};
+            this.cells[0][i] = {
+                cell: null, 
+                neighborhood: null, 
+                pos: null, 
+                x: (i % this.width) * this.cellSize + this.cellSize / 2, 
+                y: (i / this.width) * this.cellSize + this.cellSize / 2,
+                id: ids[i]
+            };
+            this.cells[1][i] = {
+                cell: null, 
+                neighborhood: null, 
+                pos: null, 
+                x: (i % this.width) * this.cellSize + this.cellSize / 2, 
+                y: (i / this.width) * this.cellSize + this.cellSize / 2,
+                id: ids[i]
+            };
         }
 
         for(let i = 0; i < this.width * this.height; ++i)
@@ -215,12 +282,11 @@ module.exports = class Renderer
         {
             for(let i = 0; i < this.width * this.height; ++i)
             {
-                this.currentId = i;
+                this.currentCell = this.cells[this.step][i];
                 this.cells[this.step][i].cell = global.construct();                    
             }
 
             this.currentCell = null;
-            this.currentId   = -1;
         }
         this.interval = setInterval(this.onRender.bind(this), Math.floor(1000 / this.fps));
     }
@@ -232,15 +298,32 @@ module.exports = class Renderer
         for(let i = 0; i < this.width * this.height; ++i)
         {
             this.currentCell = this.cells[this.step][i];
-            this.currentId   = i; 
             this.cells[1 - this.step][i].cell = global.loop();
         }
 
         this.currentCell = null;
-        this.currentId   = -1;
 
         this.step = 1 - this.step;
         this.context.putImageData(this.image, 0, 0);
+    }
+
+    onPointerMove(e)
+    {
+        
+        let r      = this.canvas.getBoundingClientRect();
+        let scaleX = (this.width * this.cellSize) / r.width;
+        let scaleY = (this.height * this.cellSize) / r.height;
+
+        this.mousePos = {
+            x : (e.pageX - r.left) * scaleX,
+            y : (e.pageY - r.top) * scaleY
+        };
+        
+    }
+
+    onPointerOut()
+    {
+        this.mousePos = null;
     }
 
 };
