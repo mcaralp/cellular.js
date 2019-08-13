@@ -1,6 +1,6 @@
 {
   "name": "cellule.js",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A library to simulate cellular automata.",
   "main": "dist/ca.min.js",
   "directories": {
