@@ -137,7 +137,7 @@ module.exports = class Renderer
         return {
             x: this.mousePos.x - this.currentCell.x,
             y: this.mousePos.y - this.currentCell.y
-        }
+        };
     }
 
     getPointerDistance()
@@ -186,7 +186,6 @@ module.exports = class Renderer
         else
         {
             index = this.coordsToIndex[second + 1][first + 1];
-            console.log(index)
             if(index == undefined) return null;
         }
         
