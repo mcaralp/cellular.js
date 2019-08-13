@@ -6,20 +6,25 @@ module.exports = class Renderer
 {
     constructor(global)
     {
-        this.global      = global;
-        this.fps         = 30; 
-        this.step        = 0;
-        this.currentCell = null;
+        this.global        = global;
+        this.fps           = 30; 
+        this.step          = 0;
+        this.currentCell   = null;
 
-        this.width       = 100;
-        this.height      = 100;
-        this.cellSize    = 1;  
-        this.canvas      = null;
-        this.parentId    = null;
-        this.interval    = null;  
-        this.setupDone   = false;
-        this.mousePos    = null;
-        this.shuffledId  = false;
+        this.width         = 100;
+        this.height        = 100;
+        this.cellSize      = 1;  
+        this.canvas        = null;
+        this.parentId      = null;
+        this.interval      = null;  
+        this.setupDone     = false;
+        this.mousePos      = null;
+        this.shuffledId    = false;
+        this.coordsToIndex = [
+            [0, 1,         2],
+            [7, undefined, 3],
+            [6, 5,         4]
+        ];
     }
 
     setCellSize(size)
@@ -122,6 +127,19 @@ module.exports = class Renderer
         return this.currentCell.id;
     }
 
+    getPointerVector()
+    {
+        if(this.currentCell == null)
+            throw Error('This function can only be called in loop or construct function.');
+
+        if(this.mousePos == null) return 0xFFFFFFFF;
+
+        return {
+            x: this.mousePos.x - this.currentCell.x,
+            y: this.mousePos.y - this.currentCell.y
+        }
+    }
+
     getPointerDistance()
     {
         if(this.currentCell == null)
@@ -157,12 +175,23 @@ module.exports = class Renderer
         return cloneDeep(this.currentCell.cell);
     }
 
-    getNeighbor(index)
+    getNeighbor(first, second)
     {
         if(this.currentCell == null)
             throw Error('This function can only be called in loop or construct function.');
 
+        let index = null;
+        if(second == undefined)
+            index = first;
+        else
+        {
+            index = this.coordsToIndex[second + 1][first + 1];
+            console.log(index)
+            if(index == undefined) return null;
+        }
+        
         return this.currentCell.neighborhood[index] == null ? null : this.currentCell.neighborhood[index].cell;
+
     }
     
 

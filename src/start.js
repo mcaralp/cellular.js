@@ -98,6 +98,11 @@ function start (global)
         render.setFramerate(fps);
     };
 
+    global.pointerVector = () =>
+    {
+        return render.getPointerVector();
+    };
+
     global.pointerDistance = () =>
     {
         return render.getPointerDistance();
@@ -136,6 +141,11 @@ function start (global)
     global.neighbor = (index) => 
     {
         return render.getNeighbor(index);
+    };
+
+    global.neighbor = (first, second) => 
+    {
+        return render.getNeighbor(first, second);
     };
 
     let render = new Renderer();
