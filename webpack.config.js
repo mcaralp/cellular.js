@@ -11,6 +11,13 @@ module.exports = (env) =>
             filename:  out,
             path: __dirname + '/dist'
         },
+        resolve:
+        {
+            alias: 
+            {
+                'hammerjs'         : 'hammerjs/hammer.min.js'
+            }
+        },
         module: 
         {
             rules: 

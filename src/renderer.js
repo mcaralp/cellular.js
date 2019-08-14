@@ -1,5 +1,6 @@
 
 const util      = require('./util');
+const Hammer    = require('hammerjs');
 const cloneDeep = require('clone-deep');
 
 module.exports = class Renderer
@@ -25,6 +26,8 @@ module.exports = class Renderer
             [7, undefined, 3],
             [6, 5,         4]
         ];
+
+        this.mc            = null;
     }
 
     setCellSize(size)
@@ -197,9 +200,20 @@ module.exports = class Renderer
     createAutomaton()
     {
         this.canvas  = document.createElement('canvas');
+
+        this.mc = new Hammer(this.canvas);
+        this.mc.on('pan', this.onPan.bind(this));
+        this.mc.on('panend', this.onPanEnd.bind(this));
+        this.mc.on('press', this.onPan.bind(this));
+        this.mc.on('pressup', this.onPanEnd.bind(this));
+        this.mc.get('pan').set({ threshold: 0 });
+        this.mc.get('pan').set({ pointers: 1 });
+        this.mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+        this.mc.get('press').set({ time: 0 });    
         this.canvas.addEventListener('mousemove', this.onPointerMove.bind(this));
         this.canvas.addEventListener('mouseout', this.onPointerOut.bind(this));
-        
+        // this.canvas.addEventListener('touchstart', (e ) => e.preventDefault());
+
         if(typeof this.parentId == 'string' && this.parentId != null)
         {
             let parent = document.getElementById(this.parentId);
@@ -336,9 +350,30 @@ module.exports = class Renderer
         this.context.putImageData(this.image, 0, 0);
     }
 
-    onPointerMove(e)
+    onPan(e)
     {
         
+        if(e.pointerType == 'mouse') return;
+        
+        let r      = this.canvas.getBoundingClientRect();
+        let scaleX = (this.width * this.cellSize) / r.width;
+        let scaleY = (this.height * this.cellSize) / r.height;
+
+        this.mousePos = {
+            x : (e.center.x - r.left) * scaleX,
+            y : (e.center.y - r.top) * scaleY
+        };
+
+    }
+
+    onPanEnd(e)
+    {
+        if(e.pointerType == 'mouse') return;
+        this.mousePos = null;
+    }
+
+    onPointerMove(e)
+    {
         let r      = this.canvas.getBoundingClientRect();
         let scaleX = (this.width * this.cellSize) / r.width;
         let scaleY = (this.height * this.cellSize) / r.height;
@@ -347,6 +382,7 @@ module.exports = class Renderer
             x : (e.pageX - r.left) * scaleX,
             y : (e.pageY - r.top) * scaleY
         };
+        
         
     }
 
