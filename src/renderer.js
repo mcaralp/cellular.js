@@ -21,6 +21,7 @@ module.exports = class Renderer
         this.setupDone     = false;
         this.mousePos      = null;
         this.shuffledId    = false;
+        this.pointerDown   = false;
         this.coordsToIndex = [
             [0, 1,         2],
             [7, undefined, 3],
@@ -202,6 +203,7 @@ module.exports = class Renderer
         this.canvas  = document.createElement('canvas');
 
         this.mc = new Hammer(this.canvas);
+
         this.mc.on('pan', this.onPan.bind(this));
         this.mc.on('panend', this.onPanEnd.bind(this));
         this.mc.on('press', this.onPan.bind(this));
@@ -209,10 +211,13 @@ module.exports = class Renderer
         this.mc.get('pan').set({ threshold: 0 });
         this.mc.get('pan').set({ pointers: 1 });
         this.mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-        this.mc.get('press').set({ time: 0 });    
+        this.mc.get('press').set({ time: 0 });   
+
+        this.canvas.addEventListener('mousedown', this.onPointerDown.bind(this));
         this.canvas.addEventListener('mousemove', this.onPointerMove.bind(this));
+        this.canvas.addEventListener('mouseup', this.onPointerOut.bind(this));
         this.canvas.addEventListener('mouseout', this.onPointerOut.bind(this));
-        // this.canvas.addEventListener('touchstart', (e ) => e.preventDefault());
+        this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
         if(typeof this.parentId == 'string' && this.parentId != null)
         {
@@ -372,8 +377,24 @@ module.exports = class Renderer
         this.mousePos = null;
     }
 
+    onPointerDown(e)
+    {
+        this.pointerDown = true;
+
+        let r      = this.canvas.getBoundingClientRect();
+        let scaleX = (this.width * this.cellSize) / r.width;
+        let scaleY = (this.height * this.cellSize) / r.height;
+
+        this.mousePos = {
+            x : (e.pageX - r.left) * scaleX,
+            y : (e.pageY - r.top) * scaleY
+        };
+    }
+
     onPointerMove(e)
     {
+        if(!this.pointerDown) return;
+
         let r      = this.canvas.getBoundingClientRect();
         let scaleX = (this.width * this.cellSize) / r.width;
         let scaleY = (this.height * this.cellSize) / r.height;
@@ -389,6 +410,7 @@ module.exports = class Renderer
     onPointerOut()
     {
         this.mousePos = null;
+        this.pointerDown = false;
     }
 
 };
