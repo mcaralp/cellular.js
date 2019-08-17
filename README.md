@@ -52,7 +52,7 @@ function loop()
 
 ### Setup function
 
-This function is called one time at the beginning of the sketch. It is used to initialize the automation with the help of configuration functions like  `createAutomaton()` or `framerate()`. Please refer to the API section to get the full list of functions.
+This function is called one time at the beginning of the sketch. It is used to initialize the automation with the help of setup functions like  `createAutomaton()` or `framerate()`. Please refer to the API section to get the full list of functions.
 
 ```javascript
 function setup()
@@ -97,7 +97,7 @@ Where *n* and *m* are the width and height of the automaton.
 
 You can retrieve the previous state of the cell with the `cell()` function, and the neighborhood with the `neighbor()` function. The `loop()` function has to return the next state of the cell. Note that the object returned by `cell()` **must** remain unchanged. 
 
-If you modify the object returned by `cell()`, the next cell to be updated will use this modified neighborhood , while it should use the state returned at the previous cycle. Please pay attention to how Javascript copies the objects by reference or copy. If you are not sure, use the `cloneCell()` function which performs a deep clone of the previous state of the cell.
+If you modify the object returned by `cell()`, the next cell to be updated will use this modified neighborhood , while it should use the state returned at the previous cycle. Please pay attention to how Javascript copies the objects by reference or value. If you are not sure, use the `cloneCell()` function which performs a deep clone of the previous state of the cell.
 
 ```javascript
 function loop()
