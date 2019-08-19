@@ -138,7 +138,7 @@ Set the size of the cell, used by the drawing functions. Calling `cellSize()` wi
 
 #### parentId(id)
 
-Whe the canvas is created, it is pushed in the DOM body object. Id you want it to be pushed in another DOM object, you can use  this function to specify the id of this object. Calling `parentId()` with no arguments returns the current parent identifier.
+Whe the canvas is created, it is added to the DOM body object. If you need it to be pushed in another DOM object, you can use  this function to specify the id of this object. Calling `parentId()` with no arguments returns the current parent identifier.
 
 #### size(width, height)
 
@@ -147,3 +147,27 @@ Specify the dimension of the cellular automaton. It is equivalent of the functio
 #### idMode(mode)
 
 Each cell has an identifier you can get with the function `id()`. This function specifies how the cells are numeroted. If `mode == ORDERED`, then the cells are numeroted from left to right, top to bottom. If `mode == SHUFFLED`, the identifiers are shuffled. Calling `idMode()` with no arguments returns the current id mode.
+
+### State functions
+
+#### cell()
+
+#### cloneCell()
+
+#### neighbor(index)
+
+#### neighbor(x, y)
+
+#### id()
+
+### Draw functions
+
+#### point(x, y, color)
+
+#### background(color)
+
+### Pointer functions
+
+#### pointerDistance
+
+#### pointerVector
