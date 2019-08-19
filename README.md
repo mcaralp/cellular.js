@@ -22,13 +22,13 @@ Download the last version of the Cellule.js library available on the [Release pa
 npm install cellule.js
 ```
 
-Include the ca.js file or the minified version ca.min.js in your HTML page, and you are ready to go. You can also use the file provided by [a CDN](https://cdn.jsdelivr.net/npm/cellule.js@1.3.1). A sample HTML page might look like this:
+Include the ca.js file or the minified version ca.min.js in your HTML page, and you are ready to go. You can also use the file provided by [a CDN](https://cdn.jsdelivr.net/npm/cellule.js@1.3.2). A sample HTML page might look like this:
 
 ```html
 <html>
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/cellule.js@1.3.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cellule.js@1.3.2"></script>
     <script src="sketch.js"></script>
 </head>
     
