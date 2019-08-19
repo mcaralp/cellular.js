@@ -2,6 +2,13 @@
 
 Cellule.js is a library to simulate cellular automata. It is largely inspired by P5.js: you does not have to provide boilerplate code before actually writing the rules of your automaton, just a few functions are necessary to start the fun.
 
+## Table of contents
+
+- [Online Editor](#online-editor)
+- [Download and file setup](#download-and-file-setup)
+- [Your first sketch](#your-first-sketch)
+- [API](#api)
+
 ## Online editor
 
 You do not need to install the library to test it: you can use the online editor to write your first sketches, available here:
