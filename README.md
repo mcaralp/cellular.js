@@ -52,7 +52,7 @@ function loop()
 
 ### Setup function
 
-This function is called one time at the beginning of the sketch. It is used to initialize the automation with the help of setup functions like  `createAutomaton()` or `framerate()`. Please refer to the API section to get the full list of functions.
+This function is called one time at the beginning of the sketch. It is used to initialize the automaton with the help of setup functions like  `createAutomaton()` or `framerate()`. After this function is executed, a canvas is automaticaly added to the DOM with the specified parameters. Please refer to the [API section](#setup-functions) to list all these parameters.
 
 ```javascript
 function setup()
@@ -120,3 +120,30 @@ function loop()
 ## API
 
 This documentation is a work in progress. Please refer to the sketches in the examples folder to have more informations.
+
+### Setup functions
+
+#### createAutomaton(width, height, [cellSize])
+
+Creates a cellular automaton of `width`x`height` cells. You can also give the dimension of the cell, in pixels. The total width and height of the generated canvas will be `width * cellSize`and `height * cellSize`.
+If this function is not called, the a 100x100 cellular automaton will be created, with cells of dimension 1x1 pixels.
+
+#### framerate(fps)
+
+Specifies the number of updates to be computed every second. Calling `framerate()` with no arguments returns the current framerate. 
+
+#### cellSize(size)
+
+Set the size of the cell, used by the drawing functions. Calling `cellSize()` with no arguments returns the current cell size. 
+
+#### parentId(id)
+
+Whe the canvas is created, it is pushed in the DOM body object. Id you want it to be pushed in another DOM object, you can use  this function to specify the id of this object. Calling `parentId()` with no arguments returns the current parent identifier.
+
+#### size(width, height)
+
+Specify the dimension of the cellular automaton. It is equivalent of the function `createAutomaton(width, height)`. Calling `size()` with no arguments returns the current size of the cellular automaton.
+
+#### idMode(mode)
+
+Each cell has an identifier you can get with the function `id()`. This function specifies how the cells are numeroted. If `mode == ORDERED`, then the cells are numeroted from left to right, top to bottom. If `mode == SHUFFLED`, the identifiers are shuffled. Calling `idMode()` with no arguments returns the current id mode.
