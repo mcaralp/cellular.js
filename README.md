@@ -95,9 +95,9 @@ This function is called over and over to update each cell of the automaton, in t
     
 Where *n* and *m* are the width and height of the automaton.
 
-You can retrieve the previous state of the cell with the `cell()` function, and the neighborhood with the `neighbor()` function. The `loop()` function has to return the next state of the cell. Note that the object returned by `cell()` **must** remain unchanged. 
+The `loop()` function has to return the next state of the cell. You can retrieve the state returned by `loop()` (or `construct()`if it is the first cycle) with the `cell()` function, and the neighborhood with the `neighbor()` function.  Note that the object returned by `cell()` **must** remain unchanged. 
 
-If you modify the object returned by `cell()`, the next cell to be updated will use this modified neighborhood , while it should use the state returned at the previous cycle. Please pay attention to how Javascript copies the objects by reference or value. If you are not sure, use the `cloneCell()` function which performs a deep clone of the previous state of the cell.
+If you modify the object returned by `cell()`, the next cell to be updated will have an invalid neighborhood , as it should use the state returned at the previous cycle. Please pay attention to how Javascript copies the objects by reference or value. If you are not sure, use the `cloneCell()` function which performs a deep clone of the previous state of the cell.
 
 ```javascript
 function loop()
@@ -125,7 +125,7 @@ This documentation is a work in progress. Please refer to the sketches in the ex
 
 #### createAutomaton(width, height, [cellSize])
 
-Creates a cellular automaton of `width`x`height` cells. You can also give the dimension of the cell, in pixels. The total width and height of the generated canvas will be `width * cellSize`and `height * cellSize`.
+Creates a cellular automaton of `width`x`height` cells. You can also give the dimension of the cell, in pixels. Each cell will be rendered with a dimension of `cellSize`x`cellSize`, thus the total width and height of the generated canvas will be `width * cellSize`and `height * cellSize`.
 If this function is not called, the a 100x100 cellular automaton will be created, with cells of dimension 1x1 pixels.
 
 #### framerate(fps)
@@ -134,40 +134,105 @@ Specifies the number of updates to be computed every second. Calling `framerate(
 
 #### cellSize(size)
 
-Set the size of the cell, used by the drawing functions. Calling `cellSize()` with no arguments returns the current cell size. 
+Specifies the size of the cell, in pixels. Each cell will be rendered with a dimension of `size`x`size`. Defining a cell with a dimension larger than `1`x`1` is useful in conjunction with drawing functions, as it increases the expressivity of each cell. Calling `cellSize()` with no arguments returns the current cell size. 
 
 #### parentId(id)
 
-Whe the canvas is created, it is added to the DOM body object. If you need it to be pushed in another DOM object, you can use  this function to specify the id of this object. Calling `parentId()` with no arguments returns the current parent identifier.
+When the canvas is created, it is added to the DOM body object. If you need it to be added in another DOM object, you can use  this function to specify the id of the DOM object. Calling `parentId()` with no arguments returns the current parent identifier.
 
 #### size(width, height)
 
-Specify the dimension of the cellular automaton. It is equivalent of the function `createAutomaton(width, height)`. Calling `size()` with no arguments returns the current size of the cellular automaton.
+Specifies the dimension of the cellular automaton. It is equivalent of the function `createAutomaton(width, height)`. Calling `size()` with no arguments returns the current size of the cellular automaton.
 
 #### idMode(mode)
 
-Each cell has an identifier you can get with the function `id()`. This function specifies how the cells are numeroted. If `mode == ORDERED`, then the cells are numeroted from left to right, top to bottom. If `mode == SHUFFLED`, the identifiers are shuffled. Calling `idMode()` with no arguments returns the current id mode.
+Each cell has an identifier you can get with the function `id()`. This function specifies how the cells are numeroted. If `mode == ORDERED`, then the cells are numbered from left to right, top to bottom. If `mode == SHUFFLED`, the identifiers are shuffled. Calling `idMode()` with no arguments returns the current id mode.
 
 ### State functions
 
 #### cell()
 
+Returns the previous state of the current cell. This is the same object returned by the function `loop()` at the previous cycle, or by the function `construct()`if it is the first cycle.
+
 #### cloneCell()
+
+Returns a deep clone of the previous state of the current state. You can use this function to ensure that the previous state is not modified.
 
 #### neighbor(index)
 
+Returns the state of the neighbor at the given index. The neighborhood is numbered as following:
+
+```
+0 | 1    | 2
+------------
+7 | cell | 3
+-------------
+6 | 5    | 4
+```
+
 #### neighbor(x, y)
 
+Returns the state of the neighbor at the given position. The neighborhood is positioned as following:
+
+```
+-1, -1 | 0, -1 | 1, -1
+----------------------
+-1, 0  | cell  | 1, 0
+----------------------
+-1, 1  | 0, 1  | 1, 1
+```
+
 #### id()
+
+Returns the identifier of the cell. It is a value from. `0 `to `width * height`. Please check the function `idMode()` to
+see how the identifiers are numbered.
 
 ### Draw functions
 
 #### point(x, y, color)
 
+Draw a pixel at the position `(x, y)` of the current cell. The arguments `x `and `y` must be in the range of the cell size. The color is an instance of one of the following classes:
+
+`ColorRGB(red, green, blue)`
+
+Defines a color using red, green and blue components. The arguments must be in the range [0, 255].
+
+```javascript
+// Display a red pixel at (0, 0).
+point(new ColorRGB(255, 0, 0));
+```
+
+`ColorHSV(hue, saturation, value)`
+
+Defines a color using hue, saturation and value components. The hue must be in the range [0, 360], and saturation and value in the range [0, 255].
+
+```javascript
+// Display a red pixel at (0, 0).
+point(new ColorHSV(0, 255, 255));
+```
+
+You can also directly use objects with properties `r`, `g` and `b` for RGB color, or `h`, `s` and `v` for HSV color.
+
+```javascript
+// Display a red pixel at (0, 0).
+point({r: 255, g: 0, b: 0});
+```
+
+```javascript
+// Display a red pixel at (0, 0).
+point({h: 0, s: 255, v: 255});
+```
+
 #### background(color)
+
+Fill the background of the current cell with the given color. Please check the `point()` function to see how colors work.
 
 ### Pointer functions
 
-#### pointerDistance
+#### pointerDistance()
 
-#### pointerVector
+Returns the euclidean distance from the center of the current cell to the pointer in pixels. The pointer can be the mouse (using the right click), or the finger with touch devices.
+
+#### pointerVector()
+
+Returns the vector from the center of the current cell to the pointer in pixels. The pointer can be the mouse (using the right click), or the finger with touch devices. 
