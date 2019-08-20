@@ -171,6 +171,8 @@ Returns the state of the neighbor at the given index. The neighborhood is number
 6 | 5    | 4
 ```
 
+You can also use the constants `TOPLEFT`, `TOP`, `TOPRIGHT`, `RIGHT`, `BOTTOMRIGHT`, `BOTTOM`, `BOTTOMLEFT` and `LEFT` to address the neighbors.
+
 #### neighbor(x, y)
 
 Returns the state of the neighbor at the given position. The neighborhood is positioned as following:
@@ -199,7 +201,7 @@ Defines a color using red, green and blue components. The arguments must be in t
 
 ```javascript
 // Display a red pixel at (0, 0).
-point(new ColorRGB(255, 0, 0));
+point(0, 0, new ColorRGB(255, 0, 0));
 ```
 
 `ColorHSV(hue, saturation, value)`
@@ -208,19 +210,19 @@ Defines a color using hue, saturation and value components. The hue must be in t
 
 ```javascript
 // Display a red pixel at (0, 0).
-point(new ColorHSV(0, 255, 255));
+point(0, 0, new ColorHSV(0, 255, 255));
 ```
 
 You can also directly use objects with properties `r`, `g` and `b` for RGB color, or `h`, `s` and `v` for HSV color.
 
 ```javascript
 // Display a red pixel at (0, 0).
-point({r: 255, g: 0, b: 0});
+point(0, 0, {r: 255, g: 0, b: 0});
 ```
 
 ```javascript
 // Display a red pixel at (0, 0).
-point({h: 0, s: 255, v: 255});
+point(0, 0, {h: 0, s: 255, v: 255});
 ```
 
 #### background(color)
